@@ -73,3 +73,12 @@ Report:
 - files changed
 - checks run
 - any check failures or environment limits
+
+## Pull Request Workflow
+
+All changes should be made via pull requests:
+- Create a new branch for your work
+- Push the branch and open a PR targeting `master`
+- The PR will be reviewed and merged by the user
+- Track `docs.md` and `tests/` directory changes in PRs
+- `artifacts/` is excluded from version control via `.gitignore`
