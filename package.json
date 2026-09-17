@@ -1,0 +1,23 @@
+{
+  "name": "jones-automation-exercise",
+  "version": "1.0.0",
+  "description": "Jones Playwright Automation Exercise",
+  "type": "module",
+  "scripts": {
+    "automation": "node test-site/jones-automation.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.19.0",
+      "onFail": "error"
+    }
+  }
+}

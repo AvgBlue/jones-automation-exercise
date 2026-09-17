@@ -1,0 +1,5 @@
+node_modules/
+test-site/*.png
+test-site/*.pdf
+.DS_Store
+.env
