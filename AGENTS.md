@@ -36,6 +36,10 @@ Bonus: change Number of Employees from `1-10` to `51-500`.
 
 The requested deliverable is the automation files created. Treat additional infrastructure, tests, reporting, CI, or framework changes as out of scope unless the user asks for them.
 
+## Structure Rules
+
+Always read `docs.md` before adding or modifying files in this repository. It defines the approved file structure and conventions. If a proposed change conflicts with `docs.md`, call it out and ask how to proceed.
+
 ## Collaboration Rules
 
 - Keep scope narrow: implement only the task the user asked for.
