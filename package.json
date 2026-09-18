@@ -10,7 +10,7 @@
     "test:retention": "node --test tests/ci/retain-allure.test.mjs",
     "typecheck": "tsc --noEmit",
     "report:generate": "allure generate allure-results",
-    "report:open": "allure open allure-report/awesome"
+    "report:open": "allure open allure-report"
   },
   "keywords": [],
   "author": "",
