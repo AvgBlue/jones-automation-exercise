@@ -32,15 +32,16 @@ test('callback form submission flow', async ({ page }, testInfo) => {
   });
 
   await test.step('Submit form and verify thank-you page', async () => {
-    const responsePromise = page.waitForNavigation();
+    const responsePromise = page.waitForResponse(response =>
+      response.request().isNavigationRequest() &&
+      new URL(response.url()).pathname === '/thank-you.html'
+    );
+
     await callbackPage.submit();
     const response = await responsePromise;
 
+    expect(response.status(), 'thank-you page should return HTTP 200').toBe(200);
     await thankYouPage.waitForDestination();
-    expect(response?.status(), 'thank-you page should return a successful response').toBe(200);
-    await expect(page).toHaveURL(/\/thank-you\.html/);
-    await expect(await page.title()).not.toMatch(/404|not found/i);
-    await expect(await page.locator('body').textContent()).not.toMatch(/page not found|404/i);
     await expect(thankYouPage.confirmationHeading).toBeVisible();
     console.log('Successfully reached thank-you page after callback form submission');
   });
