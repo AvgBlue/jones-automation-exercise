@@ -7,6 +7,7 @@
     "automation": "node test-site/jones-automation.js",
     "test": "playwright test",
     "test:install-browsers": "playwright install chromium",
+    "test:retention": "node --test tests/ci/retain-allure.test.mjs",
     "typecheck": "tsc --noEmit",
     "report:generate": "allure generate allure-results",
     "report:open": "allure open allure-report/awesome"
