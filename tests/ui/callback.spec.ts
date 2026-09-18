@@ -4,12 +4,16 @@ import { verifyCallbackFormReady, verifyCallbackFormValues } from './keywords/ca
 import { CallbackPage } from './models/CallbackPage';
 import { ThankYouPage } from './models/ThankYouPage';
 
+// Each test gets a fresh Playwright page and starts from the callback form.
+test.beforeEach('Open callback form', async ({ page }) => {
+  await new CallbackPage(page).goto();
+});
+
 test('callback form submission flow', async ({ page }, testInfo) => {
   const callbackPage = new CallbackPage(page);
   const thankYouPage = new ThankYouPage(page);
 
-  await test.step('Navigate to callback form', async () => {
-    await callbackPage.goto();
+  await test.step('Verify callback form is ready', async () => {
     await verifyCallbackFormReady(callbackPage);
   });
 
