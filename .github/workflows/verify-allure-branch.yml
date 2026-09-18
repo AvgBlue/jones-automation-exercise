@@ -28,7 +28,9 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Run live Playwright test
         run: pnpm test
-      - name: Generate report
+      - name: Generate report and inspect its output
         run: |
           pnpm run report:generate
+          echo 'Allure output files:'
+          find allure-report -maxdepth 4 -type f | head -60
           test -f allure-report/awesome/index.html
