@@ -75,7 +75,7 @@ jobs:
             git -C "$ARCHIVE_DIR" rm -rf --ignore-unmatch .
           fi
 
-          node scripts/retain-allure.mjs allure-report/awesome "$ARCHIVE_DIR" "$GITHUB_RUN_ID"
+          node scripts/retain-allure.mjs allure-report "$ARCHIVE_DIR" "$GITHUB_RUN_ID"
 
           git -C "$ARCHIVE_DIR" config user.name 'github-actions[bot]'
           git -C "$ARCHIVE_DIR" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
