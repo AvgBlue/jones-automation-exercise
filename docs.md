@@ -5,7 +5,7 @@ This document describes the recommended file structure for the Jones Automation 
 ## Root Level
 
 - `package.json` - Project configuration and scripts for the legacy automation, Playwright tests, browser installation, TypeScript checking, and Allure reporting
-- `tsconfig.json` - TypeScript type-check configuration for `tests/**/*.ts` using bundler-compatible ESM resolution
+- `tsconfig.json` - TypeScript type-check configuration for `playwright.config.ts` and `tests/**/*.ts` using bundler-compatible ESM resolution
 - `playwright.config.ts` - Chromium test runner configuration and console/Allure reporters, limited to `tests/ui`
 - `pnpm-lock.yaml` - Lock file for pnpm package manager
 - `Jones_Automation_Exercise.md` - Assignment reference document
@@ -28,7 +28,7 @@ pnpm run report:open
 pnpm run test:retention
 ```
 
-`pnpm test` runs Playwright and writes raw Allure files to `allure-results/`. `pnpm run report:generate` creates the static report at `allure-report/awesome/`; `report:open` previews it. `pnpm run test:retention` checks report copying, the five-run limit, reruns and invalid inputs without a browser. The original `pnpm run automation` JavaScript automation is retained. Browser installation is a separate explicit step. The callback test requires the live destination to return HTTP 200 and display the expected thank-you heading; if the live site is broken, the E2E test must fail rather than accepting a 404.
+`pnpm test` runs Playwright and writes raw Allure files to `allure-results/`. `pnpm run report:generate` creates the static report at `allure-report/`; `report:open` previews it. `pnpm run test:retention` checks report copying, the five-run limit, reruns and invalid inputs without a browser. The original `pnpm run automation` JavaScript automation is retained. Browser installation is a separate explicit step. The callback test requires the live destination to return HTTP 200 and display the expected thank-you heading; if the live site is broken, the E2E test must fail rather than accepting a 404.
 
 ## Allure CI and GitHub Pages
 
