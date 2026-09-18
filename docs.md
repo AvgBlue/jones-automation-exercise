@@ -4,21 +4,34 @@ This document describes the recommended file structure for the Jones Automation 
 
 ## Root Level
 
-- `package.json` - Project configuration and scripts
-- `tsconfig.json` - TypeScript compiler options
-- `playwright.config.ts` - Playwright test runner configuration (future)
+- `package.json` - Project configuration and scripts for the legacy automation, Playwright tests, browser installation, and TypeScript checking
+- `tsconfig.json` - TypeScript type-check configuration for `tests/**/*.ts` using bundler-compatible ESM resolution
+- `playwright.config.ts` - Playwright test runner configuration (future, if required)
 - `pnpm-lock.yaml` - Lock file for pnpm package manager
 - `Jones_Automation_Exercise.md` - Assignment reference document
 - `AGENTS.md` - Agent instructions for this project
 - `docs.md` - This file, documenting the project structure
 
+## Running the Tests
+
+Install Node.js 20 or later and a compatible pnpm 11 version, then run:
+
+```sh
+pnpm install --frozen-lockfile
+pnpm run test:install-browsers
+pnpm run typecheck
+pnpm test
+```
+
+`pnpm test` runs the Playwright test runner, while `pnpm run automation` retains the original JavaScript automation. Browser installation is a separate explicit step. The callback test requires the live destination to return HTTP 200 and display the expected thank-you heading; if the live site is broken, the E2E test must fail rather than accepting a 404.
+
 ## test-site/
 
 The target application files.
 
-- `index.html` - Main form page
+- `index.html` - Main form page snapshot
 - `_app.css` - Stylesheet
-- `jones-automation.js` - Existing automation script (can be converted to TypeScript)
+- `jones-automation.js` - Existing JavaScript automation script
 
 ## tests/ui/
 
