@@ -8,5 +8,9 @@ export default defineConfig({
   ],
   use: {
     browserName: 'chromium',
+    video: {
+      mode: 'on',
+      size: { width: 800, height: 450 },
+    },
   },
 });
