@@ -3,6 +3,8 @@ name: Playwright tests and Allure reports
 on:
   push:
     branches: [master]
+  pull_request:
+    branches: [master]
   workflow_dispatch:
 
 # Report storage is a dedicated branch; Pages deployment uses GitHub Actions as its source.
@@ -60,6 +62,9 @@ jobs:
       - name: Generate Allure report
         run: pnpm run report:generate
 
+      - name: Verify embedded video and report its size
+        run: node scripts/check-allure-video.mjs
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
 
@@ -113,3 +118,36 @@ jobs:
       - name: Preserve the failed test status
         if: always() && steps.tests.outcome == 'failure'
         run: exit 1
+
+  # PRs check the live test, video attachment and size without deploying a public site.
+  verify-video:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out tests
+        uses: actions/checkout@v5
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.19.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Type-check and test retention
+        run: |
+          pnpm run typecheck
+          pnpm run test:retention
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Run live Playwright test
+        run: pnpm test
+      - name: Generate Allure report
+        run: pnpm run report:generate
+      - name: Verify video attachment and measure size
+        run: node scripts/check-allure-video.mjs
