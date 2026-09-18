@@ -12,31 +12,31 @@ import { CallbackPage } from './models/CallbackPage';
 import { ThankYouPage } from './models/ThankYouPage';
 
 // Each test gets a fresh Playwright page and starts from the callback form.
-test.beforeEach('Open callback form', async ({ page }) => {
-  await openCallbackForm(new CallbackPage(page));
-});
+test.beforeEach('Open callback form', ({ page }) =>
+  openCallbackForm(new CallbackPage(page))
+);
 
 test('callback form submission flow', async ({ page }, testInfo) => {
   const callbackPage = new CallbackPage(page);
   const thankYouPage = new ThankYouPage(page);
 
-  await test.step('Verify callback form is ready', async () => {
-    await verifyCallbackFormReady(callbackPage);
-  });
+  await test.step('Verify callback form is ready', () =>
+    verifyCallbackFormReady(callbackPage)
+  );
 
-  await test.step('Fill form with valid data', async () => {
-    await fillAndVerifyCallbackForm(callbackPage, validCallbackData);
-  });
+  await test.step('Fill form with valid data', () =>
+    fillAndVerifyCallbackForm(callbackPage, validCallbackData)
+  );
 
-  await test.step('Change employee count to 51-500', async () => {
-    await selectAndVerifyEmployeeCount(callbackPage, desiredEmployeeCount);
-  });
+  await test.step('Change employee count to 51-500', () =>
+    selectAndVerifyEmployeeCount(callbackPage, desiredEmployeeCount)
+  );
 
-  await test.step('Take screenshot before submission', async () => {
-    await capturePreSubmissionScreenshot(callbackPage, testInfo);
-  });
+  await test.step('Take screenshot before submission', () =>
+    capturePreSubmissionScreenshot(callbackPage, testInfo)
+  );
 
-  await test.step('Submit form and verify thank-you page', async () => {
-    await submitAndVerifyThankYouPage(callbackPage, thankYouPage, page);
-  });
+  await test.step('Submit form and verify thank-you page', () =>
+    submitAndVerifyThankYouPage(callbackPage, thankYouPage, page)
+  );
 });
