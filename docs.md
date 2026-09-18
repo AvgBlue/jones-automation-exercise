@@ -24,7 +24,7 @@ The target application files.
 
 Playwright UI tests organized by feature.
 
-- `callback.spec.ts` - Callback-request scenario and its assertions
+- `callback.spec.ts` - Callback-request scenario with named `test.step` phases and independent per-test navigation in `beforeEach`
 
 ### tests/ui/models/
 
@@ -36,9 +36,10 @@ Page objects and reusable UI components.
 
 ### tests/ui/keywords/
 
-Small, scenario-specific reusable verification operations called from tests; not a generic keyword execution engine.
+Small, scenario-specific operations called from tests; not a generic keyword execution engine. Page Objects own locators and basic interactions; keywords combine them with scenario assertions.
 
-- `callback.keywords.ts` - Form readiness and entered-value verification
+- `callback.keywords.ts` - Navigation, form readiness, fill/value checks, employee selection checks, and pre-submit screenshot attachment
+- `thankYou.keywords.ts` - Submission and successful confirmation checks (navigation response HTTP 200, destination URL and heading)
 
 ### tests/ui/fixtures/
 
