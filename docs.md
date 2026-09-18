@@ -4,26 +4,43 @@ This document describes the recommended file structure for the Jones Automation 
 
 ## Root Level
 
-- `package.json` - Project configuration and scripts for the legacy automation, Playwright tests, browser installation, and TypeScript checking
+- `package.json` - Project configuration and scripts for the legacy automation, Playwright tests, browser installation, TypeScript checking, and Allure reporting
 - `tsconfig.json` - TypeScript type-check configuration for `tests/**/*.ts` using bundler-compatible ESM resolution
-- `playwright.config.ts` - Playwright test runner configuration (future, if required)
+- `playwright.config.ts` - Chromium test runner configuration and console/Allure reporters, limited to `tests/ui`
 - `pnpm-lock.yaml` - Lock file for pnpm package manager
 - `Jones_Automation_Exercise.md` - Assignment reference document
 - `AGENTS.md` - Agent instructions for this project
 - `docs.md` - This file, documenting the project structure
+- `.github/workflows/allure-reports.yml` - CI tests, Allure generation, five-report retention and GitHub Pages deployment
+- `scripts/retain-allure.mjs` - Copy a complete report into the persistent five-run archive and create a redirect to the latest report
 
 ## Running the Tests
 
-Install Node.js 20 or later and a compatible pnpm 11 version, then run:
+Install Node.js 22 or later and a compatible pnpm 11 version, then run:
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm run test:install-browsers
 pnpm run typecheck
 pnpm test
+pnpm run report:generate
+pnpm run report:open
+pnpm run test:retention
 ```
 
-`pnpm test` runs the Playwright test runner, while `pnpm run automation` retains the original JavaScript automation. Browser installation is a separate explicit step. The callback test requires the live destination to return HTTP 200 and display the expected thank-you heading; if the live site is broken, the E2E test must fail rather than accepting a 404.
+`pnpm test` runs Playwright and writes raw Allure files to `allure-results/`. `pnpm run report:generate` creates the static report at `allure-report/awesome/`; `report:open` previews it. `pnpm run test:retention` checks report copying, the five-run limit, reruns and invalid inputs without a browser. The original `pnpm run automation` JavaScript automation is retained. Browser installation is a separate explicit step. The callback test requires the live destination to return HTTP 200 and display the expected thank-you heading; if the live site is broken, the E2E test must fail rather than accepting a 404.
+
+## Allure CI and GitHub Pages
+
+The workflow runs on pushes to `master` and manual runs selected on `master`. It installs frozen dependencies and Chromium, checks TypeScript and the retention script, runs Playwright, generates Allure HTML, and publishes the result to GitHub Pages. A failed Playwright test still produces and publishes its report; the final CI result remains failed.
+
+**One-time setup:** In the repository's **Settings → Pages**, choose **GitHub Actions** as the Build and deployment source. Check that Pages is available for this private repository on your GitHub plan. **The published report site is publicly accessible by default even though this repository is private.** Do not place passwords, credentials, personally identifiable test data, or sensitive screenshots in reports. If Pages is unavailable or access is unacceptable, do not enable deployment without choosing another host.
+
+The workflow stores the five most recently published complete reports on the generated `allure-reports-store` branch at `runs/<GitHub Actions run ID>/`. A minimal root `index.html` redirects to the latest Allure report; it is not a custom dashboard. The branch's `.retained-runs.json` holds only retention ordering; no separate Allure trend history is maintained. Each new completed report deletes reports beyond the newest five. Previously published per-run links expire when pruned.
+
+After a successful Pages deployment, the **GitHub Actions run Summary** displays a clickable **View this run's Allure report** link. It is written through `$GITHUB_STEP_SUMMARY` and does not require opening the job's logs. If deployment fails, the summary states that no live link is available instead of displaying an unverified URL. The workflow serializes publication to protect the archive from concurrent updates.
+
+The workflow uses the repository's Actions-provided `GITHUB_TOKEN` (`contents: write`, `pages: write`, `id-token: write`); no personal access token is needed for the implementation. Pages must still be enabled in repository settings before the first successful publication.
 
 ## test-site/
 
@@ -66,6 +83,10 @@ Generated screenshots from test runs.
 
 - `.gitkeep` - Placeholder for screenshot artifacts
 
+## tests/ci/
+
+- `retain-allure.test.mjs` - Node.js tests for five-report retention and the root redirect, excluded from Playwright discovery
+
 ## artifacts/
 
 Playwright-generated test artifacts.
@@ -81,4 +102,4 @@ The structure draws from XM Cyber's `tests/ui/` organization:
 - `tests/ui/fixtures/` → Test data and fixtures
 - `artifacts/` → Generated test outputs
 
-This structure keeps tests organized while avoiding unnecessary complexity from the larger XM Cyber setup (automation-infra, CI tools, Allure reporting, etc.).
+This structure keeps tests organized while avoiding broader complexity from the larger XM Cyber setup (automation-infra and generic keyword engines).
