@@ -1,0 +1,114 @@
+name: Playwright tests and Allure reports
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Report storage is a dedicated branch; Pages deployment uses GitHub Actions as its source.
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Prevent two runs from overwriting the same five-report archive.
+concurrency:
+  group: allure-pages-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  test-and-publish:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out tests
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check five-report retention
+        run: pnpm run test:retention
+
+      - name: Type-check
+        run: pnpm run typecheck
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      # A failed test must still produce and publish its Allure report.
+      - name: Run Playwright
+        id: tests
+        continue-on-error: true
+        run: pnpm test
+
+      - name: Generate Allure report
+        run: pnpm run report:generate
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preserve the five most recently published reports
+        env:
+          ARCHIVE_DIR: ${{ runner.temp }}/allure-archive
+        run: |
+          if git ls-remote --exit-code --heads origin allure-reports-store > /dev/null; then
+            git fetch --no-tags origin refs/heads/allure-reports-store:refs/remotes/origin/allure-reports-store
+            git worktree add -B allure-reports-store "$ARCHIVE_DIR" origin/allure-reports-store
+          else
+            git worktree add --detach "$ARCHIVE_DIR" HEAD
+            git -C "$ARCHIVE_DIR" checkout --orphan allure-reports-store
+            git -C "$ARCHIVE_DIR" rm -rf --ignore-unmatch .
+          fi
+
+          node scripts/retain-allure.mjs allure-report/awesome "$ARCHIVE_DIR" "$GITHUB_RUN_ID"
+
+          git -C "$ARCHIVE_DIR" config user.name 'github-actions[bot]'
+          git -C "$ARCHIVE_DIR" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$ARCHIVE_DIR" add -A
+          if ! git -C "$ARCHIVE_DIR" diff --cached --quiet; then
+            git -C "$ARCHIVE_DIR" commit -m "Retain Allure report for run $GITHUB_RUN_ID"
+            git -C "$ARCHIVE_DIR" push origin HEAD:refs/heads/allure-reports-store
+          fi
+
+      - name: Upload site for GitHub Pages
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/allure-archive
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # GitHub renders this on the workflow run's Summary tab, not in step logs.
+      - name: Add report link to workflow summary
+        if: always()
+        env:
+          DEPLOY_OUTCOME: ${{ steps.deployment.outcome }}
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+        run: |
+          if [[ "$DEPLOY_OUTCOME" == 'success' && -n "$PAGE_URL" ]]; then
+            report_url="${PAGE_URL%/}/runs/${GITHUB_RUN_ID}/"
+            printf '## Allure report\n\n[**View this run’s Allure report**](%s)\n\nPlaywright result: `%s`\n' "$report_url" "$TEST_OUTCOME" >> "$GITHUB_STEP_SUMMARY"
+          else
+            printf '## Allure report\n\nPublishing did not complete; no live report link is available.\n\nPlaywright result: `%s`\n' "$TEST_OUTCOME" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Preserve the failed test status
+        if: always() && steps.tests.outcome == 'failure'
+        run: exit 1
