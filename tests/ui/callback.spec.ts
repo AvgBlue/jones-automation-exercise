@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { validCallbackData, desiredEmployeeCount } from './fixtures/callbackData';
+import { verifyCallbackFormReady, verifyCallbackFormValues } from './keywords/callback.keywords';
 import { CallbackPage } from './models/CallbackPage';
 import { ThankYouPage } from './models/ThankYouPage';
 
@@ -9,30 +10,12 @@ test('callback form submission flow', async ({ page }, testInfo) => {
 
   await test.step('Navigate to callback form', async () => {
     await callbackPage.goto();
-    
-    const visibleElements = [
-      callbackPage.nameInput,
-      callbackPage.emailInput,
-      callbackPage.phoneInput,
-      callbackPage.companyInput,
-      callbackPage.websiteInput,
-      callbackPage.employeesSelect,
-      callbackPage.submitButton
-    ];
-    await Promise.all(visibleElements.map(element => expect(element).toBeVisible()));
+    await verifyCallbackFormReady(callbackPage);
   });
 
   await test.step('Fill form with valid data', async () => {
     await callbackPage.fillForm(validCallbackData);
-    
-    const fieldValues = [
-      { input: callbackPage.nameInput, value: validCallbackData.name },
-      { input: callbackPage.emailInput, value: validCallbackData.email },
-      { input: callbackPage.phoneInput, value: validCallbackData.phone },
-      { input: callbackPage.companyInput, value: validCallbackData.company },
-      { input: callbackPage.websiteInput, value: validCallbackData.website }
-    ];
-    await Promise.all(fieldValues.map(({ input, value }) => expect(input).toHaveValue(value)));
+    await verifyCallbackFormValues(callbackPage, validCallbackData);
   });
 
   await test.step('Change employee count to 51-500', async () => {
