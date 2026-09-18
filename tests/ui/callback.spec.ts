@@ -9,22 +9,30 @@ test('callback form submission flow', async ({ page }, testInfo) => {
 
   await test.step('Navigate to callback form', async () => {
     await callbackPage.goto();
-    await expect(callbackPage.nameInput).toBeVisible();
-    await expect(callbackPage.emailInput).toBeVisible();
-    await expect(callbackPage.phoneInput).toBeVisible();
-    await expect(callbackPage.companyInput).toBeVisible();
-    await expect(callbackPage.websiteInput).toBeVisible();
-    await expect(callbackPage.employeesSelect).toBeVisible();
-    await expect(callbackPage.submitButton).toBeVisible();
+    
+    const visibleElements = [
+      callbackPage.nameInput,
+      callbackPage.emailInput,
+      callbackPage.phoneInput,
+      callbackPage.companyInput,
+      callbackPage.websiteInput,
+      callbackPage.employeesSelect,
+      callbackPage.submitButton
+    ];
+    await Promise.all(visibleElements.map(element => expect(element).toBeVisible()));
   });
 
   await test.step('Fill form with valid data', async () => {
     await callbackPage.fillForm(validCallbackData);
-    await expect(callbackPage.nameInput).toHaveValue(validCallbackData.name);
-    await expect(callbackPage.emailInput).toHaveValue(validCallbackData.email);
-    await expect(callbackPage.phoneInput).toHaveValue(validCallbackData.phone);
-    await expect(callbackPage.companyInput).toHaveValue(validCallbackData.company);
-    await expect(callbackPage.websiteInput).toHaveValue(validCallbackData.website);
+    
+    const fieldValues = [
+      { input: callbackPage.nameInput, value: validCallbackData.name },
+      { input: callbackPage.emailInput, value: validCallbackData.email },
+      { input: callbackPage.phoneInput, value: validCallbackData.phone },
+      { input: callbackPage.companyInput, value: validCallbackData.company },
+      { input: callbackPage.websiteInput, value: validCallbackData.website }
+    ];
+    await Promise.all(fieldValues.map(({ input, value }) => expect(input).toHaveValue(value)));
   });
 
   await test.step('Change employee count to 51-500', async () => {
