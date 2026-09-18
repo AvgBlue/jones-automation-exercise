@@ -28,9 +28,11 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Run live Playwright test
         run: pnpm test
-      - name: Generate report and inspect its output
+      - name: Generate and archive a real report
         run: |
           pnpm run report:generate
-          echo 'Allure output files:'
-          find allure-report -maxdepth 4 -type f | head -60
-          test -f allure-report/awesome/index.html
+          test -f allure-report/index.html
+          site_dir="$(mktemp -d)"
+          node scripts/retain-allure.mjs allure-report "$site_dir" "$GITHUB_RUN_ID"
+          test -f "$site_dir/runs/$GITHUB_RUN_ID/index.html"
+          test -f "$site_dir/index.html"
