@@ -1,12 +1,19 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { validCallbackData, desiredEmployeeCount } from './fixtures/callbackData';
-import { verifyCallbackFormReady, verifyCallbackFormValues } from './keywords/callback.keywords';
+import {
+  openCallbackForm,
+  verifyCallbackFormReady,
+  fillAndVerifyCallbackForm,
+  selectAndVerifyEmployeeCount,
+  capturePreSubmissionScreenshot,
+} from './keywords/callback.keywords';
+import { submitAndVerifyThankYouPage } from './keywords/thankYou.keywords';
 import { CallbackPage } from './models/CallbackPage';
 import { ThankYouPage } from './models/ThankYouPage';
 
 // Each test gets a fresh Playwright page and starts from the callback form.
 test.beforeEach('Open callback form', async ({ page }) => {
-  await new CallbackPage(page).goto();
+  await openCallbackForm(new CallbackPage(page));
 });
 
 test('callback form submission flow', async ({ page }, testInfo) => {
@@ -18,31 +25,18 @@ test('callback form submission flow', async ({ page }, testInfo) => {
   });
 
   await test.step('Fill form with valid data', async () => {
-    await callbackPage.fillForm(validCallbackData);
-    await verifyCallbackFormValues(callbackPage, validCallbackData);
+    await fillAndVerifyCallbackForm(callbackPage, validCallbackData);
   });
 
   await test.step('Change employee count to 51-500', async () => {
-    await callbackPage.selectEmployeeCount(desiredEmployeeCount);
-    await expect(callbackPage.employeesSelect).toHaveValue(desiredEmployeeCount);
+    await selectAndVerifyEmployeeCount(callbackPage, desiredEmployeeCount);
   });
 
   await test.step('Take screenshot before submission', async () => {
-    await callbackPage.takeScreenshot(testInfo.outputPath('callback-before-submit.png'));
+    await capturePreSubmissionScreenshot(callbackPage, testInfo);
   });
 
   await test.step('Submit form and verify thank-you page', async () => {
-    const responsePromise = page.waitForResponse(response =>
-      response.request().isNavigationRequest() &&
-      new URL(response.url()).pathname === '/thank-you.html'
-    );
-
-    await callbackPage.submit();
-    const response = await responsePromise;
-
-    expect(response.status(), 'thank-you page should return HTTP 200').toBe(200);
-    await thankYouPage.waitForDestination();
-    await expect(thankYouPage.confirmationHeading).toBeVisible();
-    console.log('Successfully reached thank-you page after callback form submission');
+    await submitAndVerifyThankYouPage(callbackPage, thankYouPage, page);
   });
 });
