@@ -1,84 +1,36 @@
-# AGENTS.md - Jones Automation Exercise
+# AGENTS.md — Jones Automation Exercise
 
-## Role
+## Scope and sources of truth
 
-Assist the user on the Jones Playwright automation exercise. The user leads architecture, scope, and implementation choices.
+This repository is a TypeScript Playwright submission for the Jones callback-form exercise. The user decides the scope, architecture and merge timing. Make narrow changes for the current request and preserve unrelated work.
 
-Work on the specific request in the current turn, keep changes small, and stop after reporting what changed and what was verified.
+Before changing code or project structure, read:
+- `Jones_Automation_Exercise.md` for the original task and deliverables.
+- `docs.md` for the current repository structure and commands.
+- Relevant test, configuration and CI files for actual implementation details.
 
-## Sources Of Truth
+The target is the **live** `https://test.netlify.app/` website. There is no local website snapshot or standalone JavaScript implementation in the final project. Do not silently introduce a mock or accept a broken live destination as success.
 
-- `Jones_Automation_Exercise.md` is the assignment reference. Read it when the task concerns requirements, deliverables, or expected automation behavior.
-- The repository state is the implementation reference. Inspect relevant files before changing them.
-- The live application at `https://test.netlify.app/` is the behavior reference. Use the local `test-site/index.html` snapshot for quick locator context, but verify against the live site when behavior matters.
+## Exercise behavior to preserve
 
-Current repository facts:
+The callback scenario must:
+1. Fill Name, Email, Phone, Company and Website with synthetic values.
+2. Change Number of Employees to `51-500` (bonus).
+3. Capture and attach a screenshot **before** clicking `Request a call back`.
+4. Submit, verify successful navigation and a visible thank-you heading, and call `console.log` only after those checks succeed.
 
-- Existing files include the assignment, `test-site/index.html`, `test-site/jones-automation.js`, and `test-site/_app.css`.
-- `test-site/jones-automation.js` is a JavaScript Playwright script.
-- There is currently no `package.json`, TypeScript config, Playwright test-runner config, or Page Object structure in this checkout.
+The implementation uses `tests/ui/callback.spec.ts`, Page Objects under `tests/ui/models/`, small scenario-specific functions under `tests/ui/keywords/`, and data under `tests/ui/fixtures/`. Prefer accessible labels or stable attributes, built-in Playwright waiting and precise assertions; avoid fixed sleeps and fragile positional selectors.
 
-User decisions:
+## Reporting and CI
 
-- New automation work should use Playwright with TypeScript.
-- Ask before converting the existing JavaScript script or adding TypeScript project setup files.
+`playwright.config.ts` enables Chromium, Allure reporting, screenshots and compact videos. GitHub Actions runs the tests on pull requests, while runs on `master` publish reports to GitHub Pages. The retention script preserves up to five reports and CI places the report URL directly in the run Summary when deployment succeeds. Tests must still fail the overall CI result when assertions fail, even if the report is published. Never include secrets, sensitive data or real personal information in publicly accessible reports.
 
-## Assignment Requirements
+Keep the README evaluator-oriented (how to run, what is tested, where to find results) and `docs.md` developer-oriented (structure and maintenance). Retain the original assignment for traceability.
 
-The automation flow must:
+## Collaboration and verification
 
-1. Fill Name, Email, Phone, Company, and Website.
-2. Capture a screenshot before clicking the submit button.
-3. Click `Request a call back`.
-4. Log to `console.log` when the thank-you page is reached.
-
-Bonus: change Number of Employees from `1-10` to `51-500`.
-
-The requested deliverable is the automation files created. Treat additional infrastructure, tests, reporting, CI, or framework changes as out of scope unless the user asks for them.
-
-## Structure Rules
-
-Always read `docs.md` before adding or modifying files in this repository. It defines the approved file structure and conventions. If a proposed change conflicts with `docs.md`, call it out and ask how to proceed.
-
-## Collaboration Rules
-
-- Keep scope narrow: implement only the task the user asked for.
-- Ask before introducing dependencies, new frameworks, Page Objects, converting existing JavaScript, test-runner setup, or broad restructuring.
-- Preserve existing work. If unrelated files or changes are present, leave them alone.
-- When the assignment, repository, and user request differ, follow the user request and call out the relevant difference.
-- Separate confirmed facts from assumptions in the final response.
-
-## Automation Guidance
-
-Prefer Playwright locators that match the page structure:
-
-- Use labels or stable attributes such as `id` and `name` for form fields.
-- Avoid fragile positional selectors when a meaningful locator exists.
-- Use Playwright's built-in waiting behavior instead of fixed sleeps.
-- Make the thank-you-page log happen only after navigation or another confirmed success signal.
-
-Known locator context from `test-site/index.html`:
-
-- `#name`, `#email`, `#phone`, `#company`, `#website`
-- `#employees` with option `51-500`
-- submit button text `Request a call back`
-- form action `thank-you.html`
-
-## Verification
-
-After a code change, run the smallest relevant check that the repo supports. If no package scripts or dependencies exist, say that clearly instead of claiming verification.
-
-Report:
-
-- files changed
-- checks run
-- any check failures or environment limits
-
-## Pull Request Workflow
-
-All changes should be made via pull requests:
-- Create a new branch for your work
-- Push the branch and open a PR targeting `master`
-- The PR will be reviewed and merged by the user
-- Track `docs.md` and `tests/` directory changes in PRs
-- `artifacts/` is excluded from version control via `.gitignore`
+- Use a feature branch and pull request targeting `master`; do not merge without the user's request.
+- Keep dependencies and architectural changes proportional to the requested work.
+- Do not delete documentation simply because it is not required at runtime; update stale information instead.
+- Run the smallest relevant checks: `pnpm run typecheck`, `pnpm run test:retention`, `pnpm test`, and `pnpm run report:generate` as appropriate. CI is a valid verification source when local execution is unavailable.
+- In the final response distinguish checks that passed, checks that failed and checks that were not run. Do not claim Pages deployment was verified by a pull-request smoke test.

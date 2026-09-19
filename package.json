@@ -4,7 +4,6 @@
   "description": "Jones Playwright Automation Exercise",
   "type": "module",
   "scripts": {
-    "automation": "node test-site/jones-automation.js",
     "test": "playwright test",
     "test:install-browsers": "playwright install chromium",
     "test:retention": "node --test tests/ci/retain-allure.test.mjs",
