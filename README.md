@@ -1,10 +1,21 @@
 # Jones Automation Exercise
 
-A Playwright + TypeScript end-to-end test for the callback form at [test.netlify.app](https://test.netlify.app/). This repository is my submission for the [Jones automation exercise](Jones_Automation_Exercise.md).
+A Playwright + TypeScript end-to-end test for the callback form at [test.netlify.app](https://test.netlify.app/). This is my submission for the [Jones automation exercise](Jones_Automation_Exercise.md).
 
-## Run the exercise
+## Exercise coverage
 
-**Prerequisites:** Node.js 22, pnpm 11.19.x, internet access, and a machine that can run Chromium. Run these commands from the repository root:
+| Requirement | Implementation |
+| --- | --- |
+| Fill Name, Email, Phone, Company and Website | Fill all five fields with synthetic data and verify their values. |
+| Screenshot before clicking **Request a call back** | Capture a full-page screenshot before submission and attach it to the test result as `callback-before-submit`. |
+| Bonus: change Number of Employees from `1-10` to `51-500` | Select `51-500` and verify the chosen value. |
+| Submit and log arrival at the thank-you page | Click the button, verify the navigation response is HTTP 200, confirm the destination URL and visible thank-you heading, then call `console.log`. |
+
+The scenario lives in [`tests/ui/callback.spec.ts`](tests/ui/callback.spec.ts). It uses named `test.step` phases, Page Objects for locators and basic interactions, small keyword functions for actions and assertions, and a separate fixture containing synthetic input data.
+
+## Run locally
+
+**Prerequisites:** Node.js 22, pnpm 11.19.x, internet access, and a machine that can run Chromium. From the repository root:
 
 ```bash
 pnpm install --frozen-lockfile
@@ -12,52 +23,56 @@ pnpm run test:install-browsers
 pnpm test
 ```
 
-`pnpm test` runs the callback scenario in Chromium. On success, its console output includes:
+The test runs in Chromium against the **live website**, not a mock or local copy. On success, the console prints:
 
 ```text
 Successfully reached thank-you page after callback form submission
 ```
 
-The test uses the **live website**, not a mocked or locally hosted copy. A network issue or a broken destination causes the test to fail rather than reporting a false positive.
+A network problem or a broken thank-you destination fails the test rather than producing a false positive.
 
-## What is covered
+### View the local Allure report
 
-| Exercise requirement | Implementation |
-| --- | --- |
-| Fill Name, Email, Phone, Company and Website | Fills the five fields with synthetic data and verifies their values. |
-| Screenshot before clicking **Request a call back** | Saves a full-page screenshot before submission and attaches it to the test result as `callback-before-submit`. |
-| Bonus: change Number of Employees from `1-10` to `51-500` | Selects `51-500` and verifies the selected value. |
-| Submit the form and log arrival at the thank-you page | Clicks the button, checks that the navigation response is HTTP 200, verifies the destination URL and visible thank-you heading, then calls `console.log`. |
-
-The scenario is in [`tests/ui/callback.spec.ts`](tests/ui/callback.spec.ts). Named `test.step` sections make each phase visible in the report. Page Objects provide locators and basic interactions; small keyword functions group actions and assertions. The input data is synthetic and separate from the test.
-
-## Review the results
-
-Each test records a compact WebM video and takes a pre-submission screenshot. To generate and open the local Allure report **after** running the test:
+Each run records a WebM video and attaches the pre-submission screenshot. After `pnpm test`, generate and open the report:
 
 ```bash
 pnpm run report:generate
 pnpm run report:open
 ```
 
-The generated `allure-results/`, `allure-report/`, `test-results/`, and `artifacts/` directories are intentionally excluded from Git. The screenshot and recording are available as attachments in Allure; generated evidence is not committed to the repository.
+Optional standalone checks:
 
-### GitHub Actions
+```bash
+pnpm run typecheck
+pnpm run test:retention
+```
 
-The [CI workflow](.github/workflows/allure-reports.yml) runs checks and the Playwright scenario on pull requests. On `master` (including manual workflow runs), it also generates and deploys Allure to GitHub Pages. For a completed **publishing run on `master`**, open [GitHub Actions](https://github.com/AvgBlue/jones-automation-exercise/actions/workflows/allure-reports.yml) and use **View this run’s Allure report** in the run's **Summary**—there is no need to inspect job logs. Pull-request verification runs do not publish a Pages report. Deployment failures are reported in the summary instead of showing an unverified link.
+The generated `allure-results/`, `allure-report/`, `test-results/`, and `artifacts/` directories are ignored by Git. Screenshots and videos are generated at runtime; they are not committed.
 
-The workflow keeps the **five most recently published complete reports**. A failing Playwright test still produces a report if publication succeeds, while the CI run ultimately remains failed. Older per-run URLs stop working when pruned. Published Pages reports, including screenshots and videos, may be publicly accessible; the test uses synthetic data and no credentials.
+## Run in CI
+
+The project uses a single [GitHub Actions workflow](.github/workflows/allure-reports.yml). To run it manually, open [Playwright tests and Allure reports](https://github.com/AvgBlue/jones-automation-exercise/actions/workflows/allure-reports.yml), select **Run workflow**, choose `master`, and start the run. Pushing to `master` also starts a publishing run automatically.
+
+The `master` workflow installs locked dependencies and Chromium, runs TypeScript and report-retention checks, runs the Playwright scenario, generates the Allure report, and deploys it to GitHub Pages. It retains the **five most recently published complete reports**.
+
+### View the CI report
+
+Open the completed publishing run and select its **Summary**. Click **View this run’s Allure report** to open the published report directly—there is no need to inspect individual steps or logs. The report includes screenshots and video. If deployment fails, the Summary says that no live link is available.
+
+Pull requests targeting `master` run verification and generate an Allure report in CI, **but do not deploy to Pages or display a live report URL**. If the Playwright test fails on `master`, publication is still attempted and the overall CI result remains failed. Reports retained on Pages are removed after newer runs exceed the five-report limit; old run-specific links then expire.
+
+**Privacy:** GitHub Pages reports, including screenshot and video attachments, may be publicly accessible even when the repository is private. Only synthetic test data is used; do not add credentials or sensitive data to the test.
 
 ## Project map
 
 | Path | Purpose |
 | --- | --- |
-| `tests/ui/callback.spec.ts` | End-to-end callback scenario and ordered test steps. |
+| `tests/ui/callback.spec.ts` | End-to-end callback scenario and named steps. |
 | `tests/ui/models/` | `CallbackPage` and `ThankYouPage` Page Objects. |
 | `tests/ui/keywords/` | Form actions, assertions, screenshot attachment and confirmation checks. |
 | `tests/ui/fixtures/callbackData.ts` | Synthetic form values and employee-count selection. |
-| `playwright.config.ts` | Chromium, Allure reporter, screenshots and video settings. |
-| `scripts/retain-allure.mjs` | Keeps the five most recent published reports. |
+| `playwright.config.ts` | Chromium, reporters, screenshots and video recording. |
+| `scripts/retain-allure.mjs` | Maintains the five-report archive for GitHub Pages. |
 | `tests/ci/retain-allure.test.mjs` | Tests the report-retention script. |
 
-For a quick static check without opening the browser, run `pnpm run typecheck`. To test report retention separately, run `pnpm run test:retention`. The original exercise instructions remain in [`Jones_Automation_Exercise.md`](Jones_Automation_Exercise.md).
+The original requirements are preserved in [`Jones_Automation_Exercise.md`](Jones_Automation_Exercise.md). For implementation details, see [`docs.md`](docs.md).
