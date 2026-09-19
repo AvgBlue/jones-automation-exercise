@@ -2,16 +2,7 @@
 
 A Playwright + TypeScript end-to-end test for the callback form at [test.netlify.app](https://test.netlify.app/). This is my submission for the [Jones automation exercise](Jones_Automation_Exercise.md).
 
-## Exercise coverage
-
-| Requirement | Implementation |
-| --- | --- |
-| Fill Name, Email, Phone, Company and Website | Fill all five fields with synthetic data and verify their values. |
-| Screenshot before clicking **Request a call back** | Capture a full-page screenshot before submission and attach it to the test result as `callback-before-submit`. |
-| Bonus: change Number of Employees from `1-10` to `51-500` | Select `51-500` and verify the chosen value. |
-| Submit and log arrival at the thank-you page | Click the button, verify the navigation response is HTTP 200, confirm the destination URL and visible thank-you heading, then call `console.log`. |
-
-The scenario lives in [`tests/ui/callback.spec.ts`](tests/ui/callback.spec.ts). It uses named `test.step` phases, Page Objects for locators and basic interactions, small keyword functions for actions and assertions, and a separate fixture containing synthetic input data.
+The scenario covers the five form fields, the optional employee-count change to `51-500`, a screenshot before submission, and a verified thank-you page followed by a console message. The implementation is in [`tests/ui/callback.spec.ts`](tests/ui/callback.spec.ts).
 
 ## Run locally
 
@@ -47,7 +38,7 @@ pnpm run typecheck
 pnpm run test:retention
 ```
 
-The generated `allure-results/`, `allure-report/`, `test-results/`, and `artifacts/` directories are ignored by Git. Screenshots and videos are generated at runtime; they are not committed.
+Generated `allure-results/`, `allure-report/`, `test-results/`, and `artifacts/` directories are ignored by Git. Screenshots and videos are generated at runtime, not committed.
 
 ## Run in CI
 
@@ -59,9 +50,22 @@ The `master` workflow installs locked dependencies and Chromium, runs TypeScript
 
 Open the completed publishing run and select its **Summary**. Click **View this run’s Allure report** to open the published report directly—there is no need to inspect individual steps or logs. The report includes screenshots and video. If deployment fails, the Summary says that no live link is available.
 
-Pull requests targeting `master` run verification and generate an Allure report in CI, **but do not deploy to Pages or display a live report URL**. If the Playwright test fails on `master`, publication is still attempted and the overall CI result remains failed. Reports retained on Pages are removed after newer runs exceed the five-report limit; old run-specific links then expire.
+Pull requests targeting `master` run verification and generate an Allure report in CI, **but do not deploy to Pages or display a live report URL**. If the Playwright test fails on `master`, publication is still attempted and the overall CI result remains failed. Pages keeps only five published reports, so old run-specific links expire after they are pruned.
 
-**Privacy:** GitHub Pages reports, including screenshot and video attachments, may be publicly accessible even when the repository is private. Only synthetic test data is used; do not add credentials or sensitive data to the test.
+**Privacy:** GitHub Pages reports, including screenshot and video attachments, may be publicly accessible even when the repository is private. Only synthetic test data is used; do not add credentials or sensitive data.
+
+---
+
+## Exercise coverage
+
+| Requirement | Implementation |
+| --- | --- |
+| Fill Name, Email, Phone, Company and Website | Fill all five fields with synthetic data and verify their values. |
+| Screenshot before clicking **Request a call back** | Capture a full-page screenshot before submission and attach it as `callback-before-submit`. |
+| Bonus: change Number of Employees from `1-10` to `51-500` | Select `51-500` and verify the selected value. |
+| Submit and log arrival at the thank-you page | Click the button, verify HTTP 200, the destination URL and visible heading, then call `console.log`. |
+
+Named `test.step` phases make the flow readable. Page Objects provide locators and basic interactions, keywords group actions and assertions, and a fixture holds synthetic test data.
 
 ## Project map
 
