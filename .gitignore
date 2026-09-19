@@ -2,7 +2,21 @@
 node_modules/
 dist/
 artifacts/
+
+# Node.js
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintrc.js
+.eslintrc.json
+.prettierrc.js
+
+# Playwright
 test-results/
 playwright-report/
+
+# Allure
 allure-results/
 allure-report/
