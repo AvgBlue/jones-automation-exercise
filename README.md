@@ -44,7 +44,7 @@ The generated `allure-results/`, `allure-report/`, `test-results/`, and `artifac
 
 ### GitHub Actions
 
-The [CI workflow](.github/workflows/allure-reports.yml) runs checks and the Playwright scenario on pull requests. On `master` (including manual workflow runs), it also generates and deploys Allure to GitHub Pages. Open a completed [GitHub Actions run](https://github.com/AvgBlue/jones-automation-exercise/actions/workflows/allure-reports.yml) and use **View this run’s Allure report** in the run's **Summary**—there is no need to inspect job logs. Deployment failures are reported in the summary instead of showing an unverified link.
+The [CI workflow](.github/workflows/allure-reports.yml) runs checks and the Playwright scenario on pull requests. On `master` (including manual workflow runs), it also generates and deploys Allure to GitHub Pages. For a completed **publishing run on `master`**, open [GitHub Actions](https://github.com/AvgBlue/jones-automation-exercise/actions/workflows/allure-reports.yml) and use **View this run’s Allure report** in the run's **Summary**—there is no need to inspect job logs. Pull-request verification runs do not publish a Pages report. Deployment failures are reported in the summary instead of showing an unverified link.
 
 The workflow keeps the **five most recently published complete reports**. A failing Playwright test still produces a report if publication succeeds, while the CI run ultimately remains failed. Older per-run URLs stop working when pruned. Published Pages reports, including screenshots and videos, may be publicly accessible; the test uses synthetic data and no credentials.
 
