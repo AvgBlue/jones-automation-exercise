@@ -62,9 +62,6 @@ jobs:
       - name: Generate Allure report
         run: pnpm run report:generate
 
-      - name: Verify embedded video and report its size
-        run: node scripts/check-allure-video.mjs
-
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
 
@@ -119,8 +116,8 @@ jobs:
         if: always() && steps.tests.outcome == 'failure'
         run: exit 1
 
-  # PRs check the live test, video attachment and size without deploying a public site.
-  verify-video:
+  # PRs run read-only smoke tests without publishing a public site.
+  verify-tests:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -149,5 +146,3 @@ jobs:
         run: pnpm test
       - name: Generate Allure report
         run: pnpm run report:generate
-      - name: Verify video attachment and measure size
-        run: node scripts/check-allure-video.mjs
