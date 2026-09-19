@@ -51,7 +51,7 @@ The generated `allure-results/`, `allure-report/`, `test-results/`, and `artifac
 
 ## Run in CI
 
-The project uses a single [GitHub Actions workflow](.github/workflows/allure-reports.yml). To run it manually, open [Playwright tests and Allure reports](https://github.com/AvgBlue/jones-automation-exercise/actions/workflows/allure-reports.yml), select **Run workflow**, choose `master`, and start the run. Pushing to `master` also starts a publishing run automatically.
+The project uses a single [GitHub Actions workflow](.github/workflows/allure-reports.yml). To run it manually, open [Playwright tests and Allure reports](https://github.com/AvgBlue/jones-automation-exercise/actions/workflows/allure-reports.yml), click **Run workflow**, select the `master` branch, then start the run. Pushing to `master` also starts a publishing run automatically.
 
 The `master` workflow installs locked dependencies and Chromium, runs TypeScript and report-retention checks, runs the Playwright scenario, generates the Allure report, and deploys it to GitHub Pages. It retains the **five most recently published complete reports**.
 
