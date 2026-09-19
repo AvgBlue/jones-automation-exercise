@@ -2,7 +2,7 @@
 
 A Playwright + TypeScript end-to-end test for the callback form at [test.netlify.app](https://test.netlify.app/). This is my submission for the [Jones automation exercise](Jones_Automation_Exercise.md).
 
-The scenario covers the five form fields, the optional employee-count change to `51-500`, a screenshot before submission, and a verified thank-you page followed by a console message. The implementation is in [`tests/ui/callback.spec.ts`](tests/ui/callback.spec.ts).
+The scenario covers five form fields, the bonus employee-count change to `51-500`, a screenshot before submission, and a verified thank-you page followed by a console message. The implementation is in [`tests/ui/callback.spec.ts`](tests/ui/callback.spec.ts).
 
 ## Run locally
 
@@ -53,8 +53,6 @@ Open the completed publishing run and select its **Summary**. Click **View this 
 Pull requests targeting `master` run verification and generate an Allure report in CI, **but do not deploy to Pages or display a live report URL**. If the Playwright test fails on `master`, publication is still attempted and the overall CI result remains failed. Pages keeps only five published reports, so old run-specific links expire after they are pruned.
 
 **Privacy:** GitHub Pages reports, including screenshot and video attachments, may be publicly accessible even when the repository is private. Only synthetic test data is used; do not add credentials or sensitive data.
-
----
 
 ## Exercise coverage
 
