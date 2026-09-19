@@ -4,7 +4,7 @@ import type { CallbackFormData, EmployeeCount } from '../models/CallbackPage';
 export const validCallbackData = {
   name: 'Jane Example',
   email: 'jane@example.com',
-  phone: '2025550142',
+  phone: '1234567890',
   company: 'Example Ltd',
   website: 'https://example.com',
 } satisfies CallbackFormData;

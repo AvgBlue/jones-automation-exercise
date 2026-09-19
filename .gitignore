@@ -1,4 +1,6 @@
-# Exclude artifacts directory
+# Dependencies and generated output
+node_modules/
+dist/
 artifacts/
 
 # Node.js
@@ -10,3 +12,11 @@ yarn-error.log*
 .eslintrc.js
 .eslintrc.json
 .prettierrc.js
+
+# Playwright
+test-results/
+playwright-report/
+
+# Allure
+allure-results/
+allure-report/
