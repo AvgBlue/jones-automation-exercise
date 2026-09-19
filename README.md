@@ -2,6 +2,8 @@
 
 A Playwright + TypeScript end-to-end test for the callback form at [test.netlify.app](https://test.netlify.app/). This is my submission for the [Jones automation exercise](Jones_Automation_Exercise.md).
 
+**Choose how to run:** [Run locally](#run-locally) · [Run in CI](#run-in-ci)
+
 The scenario covers five form fields, the bonus employee-count change to `51-500`, a screenshot before submission, and a verified thank-you page followed by a console message. The implementation is in [`tests/ui/callback.spec.ts`](tests/ui/callback.spec.ts).
 
 ## Run locally
