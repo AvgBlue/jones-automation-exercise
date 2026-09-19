@@ -20,3 +20,4 @@ playwright-report/
 # Allure
 allure-results/
 allure-report/
+.DS_Store
