@@ -13,7 +13,6 @@ This document describes the recommended file structure for the Jones Automation 
 - `docs.md` - This file, documenting the project structure
 - `.github/workflows/allure-reports.yml` - CI tests, Allure generation, five-report retention and GitHub Pages deployment; PRs run read-only smoke tests without publishing
 - `scripts/retain-allure.mjs` - Copy a complete report into the persistent five-run archive and create a redirect to the latest report
-- `scripts/move-allure-video-last.mjs` - Move generated Allure video attachment entries after the test steps, after hooks and other attachments for display
 
 ## Running the Tests
 
@@ -29,7 +28,7 @@ pnpm run report:open
 pnpm run test:retention
 ```
 
-`pnpm test` runs Playwright and writes raw Allure files to `allure-results/`. It records a WebM video for every test at 800×450, including successful tests. `pnpm run report:generate` creates the static report at `allure-report/`, then moves videos to the end of each test's displayed step/attachment sequence without changing the recording. `report:open` previews it. `pnpm run test:retention` checks report copying, the five-run limit, reruns and invalid inputs without a browser. The original `pnpm run automation` JavaScript automation is retained. Browser installation is a separate explicit step. The callback test requires the live destination to return HTTP 200 and display the expected thank-you heading; if the live site is broken, the E2E test must fail rather than accepting a 404.
+`pnpm test` runs Playwright and writes raw Allure files to `allure-results/`. It records a WebM video for every test at 800×450, including successful tests. `pnpm run report:generate` creates the static report at `allure-report/`; `report:open` previews it. `pnpm run test:retention` checks report copying, the five-run limit, reruns and invalid inputs without a browser. The original `pnpm run automation` JavaScript automation is retained. Browser installation is a separate explicit step. The callback test requires the live destination to return HTTP 200 and display the expected thank-you heading; if the live site is broken, the E2E test must fail rather than accepting a 404.
 
 ## Allure CI and GitHub Pages
 
