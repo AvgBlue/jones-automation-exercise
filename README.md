@@ -6,6 +6,10 @@ A Playwright + TypeScript end-to-end test for the callback form at [test.netlify
 
 The scenario covers five form fields, the bonus employee-count change to `51-500`, a screenshot before submission, and a verified thank-you page followed by a console message. The implementation is in [`tests/ui/callback.spec.ts`](tests/ui/callback.spec.ts).
 
+## Part B – Billing Form Review
+
+The [Part B written answers](part-b/README.md) include the billing form UI findings, three functional test cases, and a proposed product solution.
+
 ## Run locally
 
 **Prerequisites:** Node.js 22, pnpm 11.19.x, internet access, and a machine that can run Chromium. From the repository root:
