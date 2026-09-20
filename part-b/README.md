@@ -184,3 +184,19 @@ No payment is processed as a result of the cancellation, and the payment sandbox
 ---
 
 **Execution status:** Not executed. These test cases were designed from the UI mock-up and require a working application and payment sandbox for verification.
+
+---
+
+# Part B – Question (c): Proposed Product Solution
+
+My immediate solution would be to fix the existing billing form by adding the missing information and improving its validation.
+
+First, I would add a required country field. Based on the selected country, the form should adjust its address fields and postal code validation so international customers can enter their billing information correctly.
+
+I would also display the payment amount with an unambiguous currency code, such as `USD 30.00`, and verify whether the payment provider requires a CVV/CVC field or uses an alternative verification process.
+
+However, these changes would only address the issues we identified in the current form. We would still be responsible for maintaining the payment UI, handling different card formats, integrating with the payment system, and testing the entire payment flow.
+
+For a more complete, long-term solution, I would consider integrating an established payment provider such as Stripe, using its hosted checkout or payment components instead of building and maintaining all the payment fields ourselves.
+
+This could reduce the amount of custom payment functionality we need to maintain, but it would not eliminate our responsibility. We would still need to configure the correct currency and billing requirements, handle payment success and failure correctly, and test the integration before releasing it.
