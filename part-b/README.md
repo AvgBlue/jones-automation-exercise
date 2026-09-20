@@ -9,13 +9,13 @@ Since this is a UI mock-up rather than a working application, I can identify vis
 
 ## Missing Country Field
 
-The billing form does not include a Country field, even though the company operates globally. It requires customers to enter a State or Province without first allowing them to select their country.
+The billing form does not include a country field, even though the company operates globally. It requires customers to enter a state or province without first allowing them to select their country.
 
 This could prevent international customers from entering their billing addresses correctly. For example, an Israeli customer needs to provide an Israeli address and postal code rather than select a US state. The missing country information could also make it harder to determine which tax rules apply to a transaction.
 
-A possible solution would be to add a required Country field and adjust the address fields and validation rules based on the selected country.
+A possible solution would be to add a required country field and adjust the address fields and validation rules based on the selected country.
 
-For comparison, [Evernote](https://evernote.com/)'s checkout includes a Country selector.
+For comparison, [Evernote](https://evernote.com/)'s checkout includes a country selector.
 
 <img width="952" height="629" alt="image" src="https://github.com/user-attachments/assets/206b1245-ef2d-4d94-9df2-276e75c58eed" />
 
@@ -30,7 +30,7 @@ Even displaying `$30.00` would not completely solve this issue because several c
 
 The amount should be displayed with an unambiguous currency identifier, such as `USD 30.00` or `CAD 30.00`. The same currency should also appear on the payment confirmation and receipt.
 
-For comparison see the evernote checkout from above that include the currency idenfiter for Polish zloty.
+For comparison, see the Evernote checkout shown above, which includes a currency identifier for the Polish złoty.
 
 
 ## Missing Card Security Code
@@ -41,7 +41,7 @@ Card security codes are commonly requested during online payments as an addition
 
 I would investigate whether the security code is collected at another stage or whether the payment provider requires it.
 
-For comparison see the evernote checkout from above include the cvv long side the card number and the expeiry
+For comparison, the Evernote checkout shown above includes a CVV field alongside the card number and expiration date.
 
 ## Unclear "MI" Abbreviation
 
