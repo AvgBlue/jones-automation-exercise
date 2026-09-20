@@ -43,6 +43,22 @@ I would investigate whether the security code is collected at another stage or w
 
 For comparison, the Evernote checkout shown above includes a CVV field alongside the card number and expiration date.
 
+## Redundant Card Type Selection
+
+The form asks customers to select a card type, even though the card network can usually be identified from the card number.
+
+This adds an unnecessary step and creates an opportunity for mistakes. For example, a customer might select Visa but enter a Mastercard number. I would check whether the selection is required and how the form handles a mismatch.
+
+The form could automatically detect and display the card network as the customer enters the number, with a manual option if detection is ambiguous.
+
+## Restrictive Card Number and Postal Code Formatting
+
+The card number field instructs customers to enter the number with no dashes or spaces, while the postal code field says not to use dashes.
+
+These restrictions may make the form harder to use. For example, a customer pasting a card number formatted as `4111 1111 1111 1111` would have to remove the spaces manually. A US ZIP+4 code such as `10001-1234` contains a valid dash, and postal code formats differ between countries. The mock-up does not establish whether the application actually rejects these inputs, so I would verify that behavior.
+
+A possible solution would be to accept common card-number separators and normalize the input before validation. Postal code validation should follow the selected country's format rather than applying a blanket restriction on dashes.
+
 ## Unclear "MI" Abbreviation
 
 The form contains a field labeled `MI`, which stands for *Middle Initial*.
