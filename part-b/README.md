@@ -67,3 +67,120 @@ This abbreviation may be familiar to American customers but unclear to internati
 
 Replacing `MI` with `Middle Initial (optional)` would make the field easier to understand.
 
+---
+
+# Part B – Question (b): Functional Test Cases
+
+The following test cases cover three different flows: successful payment, input validation, and payment cancellation.
+
+These test cases are based on the provided UI mock-up. The exact payment behavior and navigation destinations should be confirmed against the product requirements before execution. All payment tests should use a payment sandbox and synthetic customer data.
+
+## TC-01: US Customer – Successful Payment
+
+**Objective:** Verify that a US customer can complete the payment process using valid information.
+
+**Preconditions:**
+- The billing form is accessible.
+- The payment sandbox is available.
+- A valid test card configured for successful payment is available.
+
+**Test data:**
+- Card type: Visa
+- Card number: Valid Visa sandbox test number
+- Expiration date: A valid future date
+- Cardholder name: John Smith
+- Billing address: A valid US test address
+- State: A valid US state
+- Postal code: A valid ZIP code
+
+**Test steps:**
+
+1. Open the billing form.
+2. Select Visa as the card type.
+3. Enter the valid test card number and expiration date.
+4. Enter the cardholder's first and last name.
+5. Fill in all required billing address fields using the US test address.
+6. Click Continue.
+7. Complete any remaining steps in the payment flow.
+8. Check the resulting page and the transaction status in the payment sandbox.
+
+**Expected result:**
+
+The form accepts the valid information, the payment is completed successfully, and the customer receives a clear confirmation. The payment sandbox records one successful transaction with the correct amount and currency.
+
+---
+
+## TC-02: Invalid Input Validation
+
+**Objective:** Verify that the form handles invalid input correctly and prevents invalid submissions.
+
+**Preconditions:**
+- The billing form is accessible.
+- A complete set of valid test data is available.
+
+**Test data:**
+
+Start with the valid data from TC-01. For each iteration, replace only one value with an invalid value.
+
+| Iteration | Field | Invalid value |
+|---|---|---|
+| 1 | Card number | An invalid card number |
+| 2 | Expiration date | A date in the past |
+| 3 | First name | Empty value |
+| 4 | Card type | Visa selected with a Mastercard test number |
+| 5 | Postal code | `ABCDE` for a US billing address |
+
+**Test steps:**
+
+1. Open the billing form.
+2. Fill in all required fields using valid test data.
+3. Replace one field with the invalid value from the table.
+4. Click Continue.
+5. Check the validation result and any displayed error messages.
+6. Restore the valid value.
+7. Repeat steps 3–6 for each remaining iteration.
+
+**Expected result:**
+
+For each iteration, the form identifies the invalid or inconsistent information and prevents an incorrect payment submission.
+
+The form displays a clear error message for the relevant field and allows the customer to correct it without re-entering all the other information.
+
+For the card-type mismatch, the form should either identify the mismatch and require correction or automatically detect the correct card network. The intended behavior should be confirmed against the requirements.
+
+No payment should be processed while the submitted information is invalid.
+
+**Note:** Each iteration should be recorded separately so that a failure can be traced to a specific input.
+
+---
+
+## TC-03: Cancel Payment
+
+**Objective:** Verify that a customer can cancel the payment process without completing a transaction.
+
+**Preconditions:**
+- The billing form is accessible.
+- The payment sandbox is available.
+- Valid test data is available.
+
+**Test data:**
+
+Use the valid customer, card, and billing information from TC-01.
+
+**Test steps:**
+
+1. Open the billing form.
+2. Fill in all required fields using valid test data.
+3. Click Cancel instead of Continue.
+4. Check the resulting page or application state.
+5. Check the transaction status in the payment sandbox.
+
+**Expected result:**
+
+The form exits the payment process and returns the customer to the appropriate page or displays a clear cancellation indication, according to the product requirements.
+
+No payment is processed as a result of the cancellation, and the payment sandbox shows no successful charge for this attempt.
+
+---
+
+**Execution status:** Not executed. These test cases were designed from the UI mock-up and require a working application and payment sandbox for verification.
