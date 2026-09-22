@@ -1,5 +1,11 @@
 # Part B – Question (a): Billing Form UI Review
 
+## Table of Contents
+
+- [Question (a): Billing Form UI Review](#part-b--question-a-billing-form-ui-review)
+- [Question (b): Functional Test Cases](#part-b--question-b-functional-test-cases)
+- [Question (c): Proposed Product Solution](#part-b--question-c-proposed-product-solution)
+
 After reviewing the billing form mock-up, I identified several potential issues related to functionality, security, usability, and internationalization.
 
 Since this is a UI mock-up rather than a working application, I can identify visible design issues and potential risks, but some of their consequences would require further testing.
@@ -19,6 +25,12 @@ For comparison, [Evernote](https://evernote.com/)'s checkout includes a country 
 
 <img width="952" height="629" alt="image" src="https://github.com/user-attachments/assets/206b1245-ef2d-4d94-9df2-276e75c58eed" />
 
+
+## Unlabeled Second Address Field
+
+The form shows two street-address inputs, but only the first has a visible label. Customers may not know whether the second input is intended for an apartment, suite, or another address detail, or whether it is optional.
+
+I would label them `Address Line 1` and `Address Line 2 (optional)` and ensure each input also has an appropriate accessible label.
 
 ## Missing Payment Currency
 
@@ -66,6 +78,12 @@ The form contains a field labeled `MI`, which stands for *Middle Initial*.
 This abbreviation may be familiar to American customers but unclear to international users. As a result, customers might not understand what information they are expected to enter.
 
 Replacing `MI` with `Middle Initial (optional)` would make the field easier to understand.
+
+## Performance Considerations
+
+I cannot determine whether the form has a performance problem from a static mock-up. With a working application, I would measure how quickly the checkout loads, whether the fields stay responsive, and how the Continue button behaves on a slow connection.
+
+I would also check that a delayed response does not lead to repeated submissions or duplicate payments. These are areas for further testing, not confirmed defects in the mock-up.
 
 ---
 
@@ -188,6 +206,8 @@ No payment is processed as a result of the cancellation, and the payment sandbox
 ---
 
 # Part B – Question (c): Proposed Product Solution
+
+I consider the missing country field the most severe issue because it could prevent international customers from entering their billing addresses correctly.
 
 My immediate solution would be to fix the existing billing form by adding the missing information and improving its validation.
 

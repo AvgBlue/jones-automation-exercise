@@ -1,6 +1,6 @@
 # Project Structure and Developer Notes
 
-This document describes the files retained in the Jones automation exercise and how the TypeScript Playwright implementation is organized. Evaluators should start with [README.md](README.md) once the evaluator README PR is merged; the original task is in [Jones_Automation_Exercise.md](Jones_Automation_Exercise.md).
+This document describes the files retained in the Jones automation exercise and how the TypeScript Playwright implementation is organized. Evaluators should start with [README.md](README.md); the original task is in [Jones_Automation_Exercise.md](Jones_Automation_Exercise.md).
 
 ## Root configuration
 
@@ -11,7 +11,7 @@ This document describes the files retained in the Jones automation exercise and 
 - `.gitignore` — excludes generated dependencies, screenshots, videos, test output and local Allure reports.
 - `AGENTS.md` — repository guidance for future code changes.
 - `Jones_Automation_Exercise.md` — original exercise requirements.
-- `README.md` — evaluator quick start, requirement coverage and report access (added in the follow-up README PR).
+- `README.md` — evaluator quick start, requirement coverage and report access.
 
 The automation targets `https://test.netlify.app/` directly; it does **not** require a local copy of the target website. An earlier standalone JavaScript prototype and copied website assets were removed in the cleanup PR to avoid two competing entry points.
 
